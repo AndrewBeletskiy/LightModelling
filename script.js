@@ -58,8 +58,8 @@ var BLUE = new Vector(0,0,255);
 var GRAY = new Vector(1,1,1);
 var WHITE = GRAY.multiply(255);
 var BLACK = GRAY.plus(new Vector(-1,-1,-1));
-var center = new Vector(200, 100,0);
-var mashtab = new Vector(75,75,75);
+var center = new Vector(200, 200,0);
+var mashtab = new Vector(40,40,40);
 //------FUNCTIONS--------------------------------------------------
 var get2dCoords = function(coord) {
 	var x = coord.x*mashtab.x;
@@ -134,10 +134,8 @@ var GetCOlorwithLight = function(lights, point) {
 			var r = lights[i].normal;
 			var n = point.normal;
 			if (r.length() == 0) {
-				r = n.reverse().multiply(100/n.length());
-			}
-
-		
+				r = n.reverse().multiply(200/n.length());
+			}		
 				
 			var d = lights[i].coord.dist(point.coord);
 			var intensity = r.dobutok(n);
@@ -147,6 +145,10 @@ var GetCOlorwithLight = function(lights, point) {
 				intensity /= -n.length();
 				intensity /= d;
 				add += intensity;
+			} else {
+				intensity /= -n.length();
+				intensity /= d;
+				add += intensity / 2;
 			}
 
 		}
@@ -157,9 +159,9 @@ var GetCOlorwithLight = function(lights, point) {
 	return oldColor;
 }
 var redraw = function(points, lights) {
-	for (var i = 0; i < z1.length; i++) {
+	/*for (var i = 0; i < z1.length; i++) {
 		points[i].clear();
-	}	
+	}*/	
 	for (var i = 0; i < z1.length; i++) {
 		points[i].draw(lights);
 	}	
@@ -179,10 +181,10 @@ var Bd = new Point(new Vector(2,0,0), new Vector(0,0,1), BLACK);
 var Cd = new Point(new Vector(2,2,0), new Vector(0,0,1), BLACK);
 var Dd = new Point(new Vector(0,2,0), new Vector(0,0,1), BLACK);
 
-var Au = new Point(new Vector(0,0,1), new Vector(0,0,1), BLACK);
-var Bu = new Point(new Vector(2,0,1), new Vector(0,0,1), BLACK);
-var Cu = new Point(new Vector(2,2,1), new Vector(0,0,1), BLACK);
-var Du = new Point(new Vector(0,2,1), new Vector(0,0,1), BLACK);
+var Au = new Point(new Vector(0,0,2), new Vector(0,0,1), BLACK);
+var Bu = new Point(new Vector(2,0,2), new Vector(0,0,1), BLACK);
+var Cu = new Point(new Vector(2,2,2), new Vector(0,0,1), BLACK);
+var Du = new Point(new Vector(0,2,2), new Vector(0,0,1), BLACK);
 
 var lights = [];
 lights.push(new Point(new Vector(1, 1, 0), new Vector(0,0,0), RED));
@@ -205,8 +207,11 @@ z1 = z1.concat(z3);
 
 var t =0;
 var f = function() {
-	lights[0].clear();
-	lights[0].coord = new Vector(2.5,0.5, Math.sin(t)*2);
+	//lights[0].clear();
+	ctx.clearRect(0,0,canvas.width, canvas.height);
+	lights[0].coord = new Vector(4*Math.sin(t),4*Math.cos(t), Math.sin(t*4) + 1);
+
+
 
 	redraw(z1, lights)
 
@@ -216,6 +221,19 @@ var f = function() {
 		lights[0].color = RED;
 
 	lights[0].draw();
+	var p1 = Ad;
+	var p2 = new Point(new Vector(lights[0].coord.x, 0,0), new Vector(0,0,0), BLACK);
+	drawLine(p1, p2, BLACK);
+	var p3 = new Point(new Vector(0,lights[0].coord.y,0), new Vector(0,0,0), BLACK);
+	drawLine(p1, p3, BLACK);
+	var p4 = new Point(new Vector(lights[0].coord.x,lights[0].coord.y,0), new Vector(0,0,0), BLACK);
+	drawLine(p2, p4, BLACK);
+	drawLine(p3, p4, BLACK);
+	drawLine(p4, lights[0], BLACK);
+	
+
+	
+	var p5 = new Point(new Vector(), new Vector(0,0,0), BLACK);
 	t += 0.1;
 	
 
