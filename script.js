@@ -31,7 +31,7 @@ var Point = function(coord, normal, color) {
 	this.coord = coord;
 	this.normal = normal;
 	this.color = color;
-	this.width = 4;
+	this.width = 6;
 	this.draw = function(lights) {
 		var oldStyle = ctx.fillStyle;
 
@@ -59,7 +59,7 @@ var GRAY = new Vector(1,1,1);
 var WHITE = GRAY.multiply(255);
 var BLACK = GRAY.plus(new Vector(-1,-1,-1));
 var center = new Vector(200, 200,0);
-var mashtab = new Vector(40,40,40);
+var mashtab = new Vector(60,60,60);
 //------FUNCTIONS--------------------------------------------------
 var get2dCoords = function(coord) {
 	var x = coord.x*mashtab.x;
@@ -196,18 +196,17 @@ lights.push(new Point(new Vector(1, 1, 0), new Vector(0,0,0), BLUE));
 lights.push(new Point(new Vector(1, 1, 0), new Vector(0,0,0), GREEN));
 
 
-var z1 = getPoligonPoints(Bd, Bu, Cu, Cd, 30);
-setNormal(z1, new Vector(1,0,0));
-
-var z2 = getPoligonPoints(Cd, Cu, Du, Dd, 30);
-setNormal(z2, new Vector(0,1,0));
-
-var z3 = getPoligonPoints(Au,Bu, Cu, Du, 30);
-setNormal(z3, new Vector(0,0,1));
-
-
-z1 = z1.concat(z2);
-z1 = z1.concat(z3);
+var z1 = [];
+for (var x = -1; x<=1; x+=0.05) {
+	for (var y = -1; y<=1; y+=0.05) {
+		var coord = new Vector(x,y,Math.cos(x*x + y*y));
+		var normal = new Vector(Math.sin(x*x + y*y)*2*x,
+								Math.sin(x*x + y*y)*2*y,
+								1);
+		var newPoint = new Point(coord, normal, BLACK);
+		z1.push(newPoint);
+	}	
+}
 
 
 
