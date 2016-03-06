@@ -144,16 +144,20 @@ var GetCOlorwithLight = function(lights, point) {
 			{
 				intensity /= -n.length();
 				intensity /= d;
-				add += intensity;
 			} else {
 				intensity /= -n.length();
 				intensity /= d;
-				add += intensity / 2;
+				intensity /= 2;
 			}
+			lightcolor = lights[i].color;
+
+
+			oldColor = oldColor.plus( lightcolor.multiply(intensity/r.length()) );
+
 
 		}
 	}
-	oldColor = oldColor.plus(GRAY.multiply(add));
+	//oldColor = oldColor.plus(GRAY.multiply(add));
 
 
 	return oldColor;
@@ -188,6 +192,9 @@ var Du = new Point(new Vector(0,2,2), new Vector(0,0,1), BLACK);
 
 var lights = [];
 lights.push(new Point(new Vector(1, 1, 0), new Vector(0,0,0), RED));
+lights.push(new Point(new Vector(1, 1, 0), new Vector(0,0,0), BLUE));
+lights.push(new Point(new Vector(1, 1, 0), new Vector(0,0,0), GREEN));
+
 
 var z1 = getPoligonPoints(Bd, Bu, Cu, Cd, 30);
 setNormal(z1, new Vector(1,0,0));
@@ -209,18 +216,19 @@ var t =0;
 var f = function() {
 	//lights[0].clear();
 	ctx.clearRect(0,0,canvas.width, canvas.height);
-	lights[0].coord = new Vector(4*Math.sin(t),4*Math.cos(t), Math.sin(t*4) + 1);
+	lights[0].coord = new Vector(3*Math.sin(t),3*Math.cos(t), Math.sin(t*4) + 1);
+	lights[1].coord = new Vector(3*Math.sin(t*2),3*Math.cos(t*2), Math.sin(t*2) + 1);
+	lights[2].coord = new Vector(3*Math.sin(t*4),3*Math.cos(t*4), Math.sin(t) + 1);
+
 
 
 
 	redraw(z1, lights)
 
-	if (lights[0].coord.z < 0)
-		lights[0].color = BLUE;
-	else 
-		lights[0].color = RED;
 
 	lights[0].draw();
+	lights[1].draw();
+	lights[2].draw();
 	var p1 = Ad;
 	var p2 = new Point(new Vector(lights[0].coord.x, 0,0), new Vector(0,0,0), BLACK);
 	drawLine(p1, p2, BLACK);
@@ -234,10 +242,10 @@ var f = function() {
 
 	
 	var p5 = new Point(new Vector(), new Vector(0,0,0), BLACK);
-	t += 0.1;
+	t += 0.05;
 	
 
-	setTimeout(f, 16);
+	setTimeout(f, 30);
 };
 f();
 
