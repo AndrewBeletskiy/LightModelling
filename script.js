@@ -134,7 +134,7 @@ var GetCOlorwithLight = function(lights, point) {
 			var r = lights[i].normal;
 			var n = point.normal;
 			if (r.length() == 0) {
-				//r = new Vector(-1,0,0);
+				r = n.reverse().multiply(100/n.length());
 			}
 
 		
@@ -155,6 +155,14 @@ var GetCOlorwithLight = function(lights, point) {
 
 
 	return oldColor;
+}
+var redraw = function(points, lights) {
+	for (var i = 0; i < z1.length; i++) {
+		points[i].clear();
+	}	
+	for (var i = 0; i < z1.length; i++) {
+		points[i].draw(lights);
+	}	
 }
 
 //-----------------------------------------------------------------
@@ -177,11 +185,20 @@ var Cu = new Point(new Vector(2,2,1), new Vector(0,0,1), BLACK);
 var Du = new Point(new Vector(0,2,1), new Vector(0,0,1), BLACK);
 
 var lights = [];
-lights.push(new Point(new Vector(1, 1, 0), new Vector(-100,0,0), RED));
+lights.push(new Point(new Vector(1, 1, 0), new Vector(0,0,0), RED));
 
-var z1 = getPoligonPoints(Bd, Bu, Cu, Cd, 50);
+var z1 = getPoligonPoints(Bd, Bu, Cu, Cd, 30);
 setNormal(z1, new Vector(1,0,0));
 
+var z2 = getPoligonPoints(Cd, Cu, Du, Dd, 30);
+setNormal(z2, new Vector(0,1,0));
+
+var z3 = getPoligonPoints(Au,Bu, Cu, Du, 30);
+setNormal(z3, new Vector(0,0,1));
+
+
+z1 = z1.concat(z2);
+z1 = z1.concat(z3);
 
 
 
@@ -191,10 +208,7 @@ var f = function() {
 	lights[0].clear();
 	lights[0].coord = new Vector(2.5,0.5, Math.sin(t)*2);
 
-	for (var i = 0; i < z1.length; i++) {
-		//z[i].clear();
-		z1[i].draw(lights);
-	}
+	redraw(z1, lights)
 
 	if (lights[0].coord.z < 0)
 		lights[0].color = BLUE;
